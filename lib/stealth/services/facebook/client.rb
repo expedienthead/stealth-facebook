@@ -12,7 +12,7 @@ module Stealth
     module Facebook
 
       class Client < Stealth::Services::BaseClient
-        FB_ENDPOINT = "https://graph.facebook.com/v2.10/me"
+        FB_ENDPOINT = "https://graph.facebook.com/v6.0/me"
 
         attr_reader :api_endpoint, :reply
 
