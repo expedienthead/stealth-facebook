@@ -409,6 +409,10 @@ module Stealth
                   _button['webview_share_button'] = 'hide'
                 end
 
+                if button['fallback_url'].present?
+                  _button['fallback_url'] = button['fallback_url']
+                end
+
                 _button
 
               when 'payload'
