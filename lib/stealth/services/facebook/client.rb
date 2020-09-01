@@ -10,16 +10,16 @@ require 'stealth/services/facebook/setup'
 module Stealth
   module Services
     module Facebook
-
       class Client < Stealth::Services::BaseClient
-        FB_ENDPOINT = "https://graph.facebook.com/v6.0/me"
+        FB_ENDPOINT = "https://graph.facebook.com/v6.0/me".freeze
 
-        attr_reader :api_endpoint, :reply
+        attr_reader :api_endpoint, :reply, :access_token
 
-        def initialize(reply:, endpoint: 'messages')
+        def initialize(reply:, endpoint: 'messages', access_token: Stealth.config.facebook.page_access_token)
           @reply = reply
-          access_token = "access_token=#{Stealth.config.facebook.page_access_token}"
-          @api_endpoint = [[FB_ENDPOINT, endpoint].join('/'), access_token].join('?')
+          @access_token = access_token
+          access_token_param = "access_token=#{@access_token}"
+          @api_endpoint = [[FB_ENDPOINT, endpoint].join('/'), access_token_param].join('?')
         end
 
         def transmit
@@ -35,7 +35,7 @@ module Stealth
 
           query_hash = {
             fields: fields.join(','),
-            access_token: Stealth.config.facebook.page_access_token
+            access_token: @access_token
           }
 
           uri = URI::HTTPS.build(
@@ -54,7 +54,7 @@ module Stealth
           end
         end
 
-        def self.track(recipient_id:, metric:, value:, options: {})
+        def self.track(recipient_id:, metric:, value:, options: {}, page_id: Stealth.config.facebook.page_id)
           metric_values = [{
             '_eventName' => metric,
             '_valueToSum' => value
@@ -69,7 +69,7 @@ module Stealth
             application_tracking_enabled: 1,
             extinfo: MultiJson.dump(['mb1']),
             page_scoped_user_id: recipient_id,
-            page_id: Stealth.config.facebook.page_id
+            page_id: page_id
           }
 
           uri = URI::HTTPS.build(
@@ -87,7 +87,6 @@ module Stealth
           end
         end
       end
-
     end
   end
 end
