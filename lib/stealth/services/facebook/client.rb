@@ -35,7 +35,7 @@ module Stealth
 
           query_hash = {
             fields: fields.join(','),
-            access_token: @access_token
+            access_token: @access_token || Stealth.config.facebook.page_access_token
           }
 
           uri = URI::HTTPS.build(
