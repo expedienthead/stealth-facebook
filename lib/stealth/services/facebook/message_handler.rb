@@ -68,6 +68,8 @@ module Stealth
           end
 
           def process_facebook_event
+            message_event = nil
+
             if facebook_message['message'].present?
               message_event = Stealth::Services::Facebook::MessageEvent.new(
                 service_message: service_message,
@@ -85,10 +87,10 @@ module Stealth
               )
             end
 
-            message_event.process
+            # Prevent exception occurs when message_event is nil
+            message_event.process if message_event.present?
           end
       end
-
     end
   end
 end
