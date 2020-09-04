@@ -38,6 +38,9 @@ module Stealth
         def process
           @service_message = ServiceMessage.new(service: 'facebook')
           @facebook_message = params['entry'].first['messaging'].first
+          page_id = facebook_page_id
+          page_access_token = facebook_page_access_token(page_id)
+          service_message.fb_page = { id: page_id, access_token: page_access_token }
           service_message.sender_id = get_sender_id
           service_message.timestamp = get_timestamp
           process_facebook_event
@@ -46,6 +49,15 @@ module Stealth
         end
 
         private
+
+          def facebook_page_id
+            params['entry'].first['id']
+          end
+
+          def facebook_page_access_token(page_id)
+            key = "fb:#{page_id}"
+            redis_backed_storage.get(key) || Stealth.config.facebook.page_access_token
+          end
 
           def facebook_is_validating_webhook?
             params['hub.verify_token'].present?
