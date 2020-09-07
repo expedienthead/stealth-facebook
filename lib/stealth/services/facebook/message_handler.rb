@@ -40,7 +40,7 @@ module Stealth
           @facebook_message = params['entry'].first['messaging'].first
           page_id = facebook_page_id
           page_access_token = facebook_page_access_token(page_id)
-          service_message.fb_page = { id: page_id, access_token: page_access_token }
+          service_message.page_info = { id: page_id, access_token: page_access_token }
           service_message.sender_id = get_sender_id
           service_message.timestamp = get_timestamp
           process_facebook_event
