@@ -56,7 +56,7 @@ module Stealth
 
           def facebook_page_access_token(page_id)
             redis_key = "facebook:#{page_id}"
-            access_token = redis_backed_storage.hget(key, 'access_token') || Stealth.config.facebook.page_access_token
+            access_token = redis_backed_storage.hget(redis_key, 'access_token') || Stealth.config.facebook.page_access_token
             raise "Cannot find access token for FB page #{page_id}" if access_token.blank?
 
             access_token
