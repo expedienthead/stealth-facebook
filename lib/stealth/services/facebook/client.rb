@@ -28,14 +28,14 @@ module Stealth
           Stealth::Logger.l(topic: "facebook", message: "Transmitting. Response: #{response.status}: #{response.body}")
         end
 
-        def self.fetch_profile(recipient_id:, fields: nil)
+        def self.fetch_profile(recipient_id:, fields: nil, access_token:)
           if fields.blank?
             fields = [:id, :name, :first_name, :last_name, :profile_pic]
           end
 
           query_hash = {
             fields: fields.join(','),
-            access_token: @access_token || Stealth.config.facebook.page_access_token
+            access_token: access_token || Stealth.config.facebook.page_access_token
           }
 
           uri = URI::HTTPS.build(
